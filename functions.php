@@ -3,54 +3,66 @@
 
 	require_once("../configGLOBAL.php");
 	$database = "if15_vitamak";
-	require_once("functions.php");
 	
-	//paneme sessioni käema, saame kasutada $_SESSION 
+	
+	// paneme sessiooni käima, saame kasutada $_SESSION muutujaid
 	session_start();
 	
-	//lisamine kasutaja abˇi
+	// lisame kasutaja ab'i
 	function createUser($create_email, $password_hash){
-	
-		//globals on muutuja kõigis php failidest mis on ühendadud
-				$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
-				
-				$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?, ?)");
-				$stmt->bind_param("ss", $create_email, $password_hash);
-				$stmt->execute();
-				$stmt->close();
-				$mysqli->close();
-			
-		}
-
-
-
-
-	function LoginUser($email, $password_hash){
+		// globals on muutuja kõigist php failidest mis on ühendatud
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
-				
-				
-				$stmt = $mysqli->prepare("SELECT id, email FROM user_sample WHERE email=? AND password=?");
-				$stmt->bind_param("ss", $email, $password_hash);
-				$stmt->bind_result($id_from_db, $email_from_db);
-				$stmt->execute();
-				if($stmt->fetch()){
-					echo "kasutaja id=".$id_from_db;
-					
-					$_SESSION["id_from_db"] = $id_from_db;
-					$_SESSION["user_email"] = $email_from_db;
-					
-					//suunan kasutaja data.php lehele
-					header("Location: data.php");
-					
-					
-					
-				}else{
-					echo "Wrong password or email!";
-					}
-					$stmt->close();
-
-					$mysqli->close();
-	
+		
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?, ?)");
+		$stmt->bind_param("ss", $create_email, $password_hash);
+		$stmt->execute();
+		$stmt->close();
+		
+		$mysqli->close();		
 	}
+	
+	//logime sisse
+	function loginUser($email, $password_hash){
+		
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("SELECT id, email FROM user_sample WHERE email=? AND password=?");
+		$stmt->bind_param("ss", $email, $password_hash);
+		$stmt->bind_result($id_from_db, $email_from_db);
+		$stmt->execute();
+		if($stmt->fetch()){
+			echo "kasutaja id=".$id_from_db;
+			
+			$_SESSION["id_from_db"] = $id_from_db;
+			$_SESSION["user_email"] = $email_from_db;
+			
+			//suunan kasutaja data.php lehele
+			header("Location: data.php");
+			
+			
+		}else{
+			echo " on wrong!";
+		}
+		$stmt->close();
+		
+		$mysqli->close();
+	}
+	
+	
+	function createCarPlate($car_plate, $color){
+		// globals on muutuja kõigist php failidest mis on ühendatud
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("INSERT INTO car_plates (user_id, number_plate, color) VALUES (?, ?, ?)");
+		$stmt->bind_param("iss", $_SESSION["id_from_db"], $car_plate, $color);
+		$stmt->execute();
+		echo $stmt->error;
+		$stmt->close();
+		
+		$mysqli->close();		
+	}
+	
+	
+	
 	
 ?>

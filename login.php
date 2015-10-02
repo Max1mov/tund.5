@@ -8,7 +8,7 @@
 	require_once("functions.php");
 	
 	//kontrollin, kas kasutaja on sisseligunud
-	if(!isset($_SESSION["id_from_db"])){
+	if(isset($_SESSION["id_from_db"])){
 		//suunan data lehele
 		header("Location: data.php");
 	}
@@ -54,7 +54,7 @@
 			}
 				// Kui oleme siia jõudnud, võime kasutaja sisse logida
 			if($password_error == "" && $email_error == ""){
-				echo "Võib sisse logida! Kasutajanimi on ".$email." ja parool on ".$password;
+				echo "Kasutajanimi ja Parool ";
 				
 				
 				
@@ -88,7 +88,7 @@
 				}
 			}
 			if(	$create_email_error == "" && $create_password_error == ""){
-				echo "Võib kasutajat luua! Kasutajanimi on ".$create_email." ja parool on ".$create_password;
+				echo "Nüüd oled registreeritud! <br> Kasutajanimi: ".$create_email." <br> Parool: ".$create_password;
 				
 				$password_hash = hash("sha512", $create_password);
 				echo "<br>";
@@ -113,6 +113,7 @@
 		return $data;
   }
   
+  
 ?>
 
 
@@ -135,7 +136,7 @@
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" >
 			<input name="create_email" type="email" placeholder="E-post" value="<?php echo $create_email; ?>"> <?php echo $create_email_error; ?><br><br>
 			<input name="create_password" type="password" placeholder="Parool"> <?php echo $create_password_error; ?> <br><br>
-			IF YOU WANT TO COMMENT THIS SITE, SO TRY IT <br><br>
+			IF YOU WANT TO COMMENT THIS SITE TRY IT <br><br>
 			<textarea name="comment" rows="5" cols="40"></textarea><br><br>
 			kas teil meeldib?<input type="radio" name="gender" value="female">Jah
 			<input type="radio" name="gender" value="male">Ei <br><br>
