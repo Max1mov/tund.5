@@ -7,6 +7,11 @@
 	//laeme funktsioni failis
 	require_once("functions.php");
 	
+	//kontrollin, kas kasutaja on sisseligunud
+	if(!isset($_SESSION["id_from_db"])){
+		//suunan data lehele
+		header("Location: data.php");
+	}
 	
 	// LOGIN.PHP
 	
@@ -50,14 +55,17 @@
 				// Kui oleme siia jõudnud, võime kasutaja sisse logida
 			if($password_error == "" && $email_error == ""){
 				echo "Võib sisse logida! Kasutajanimi on ".$email." ja parool on ".$password;
-			
-			function LoginUser(){
 				
-					
-			}	
+				
+				
+				$password_hash = hash("sha512", $password);
+				
+				LoginUser($email, $password_hash);
 			}
-			} 
-		} // login if end
+			
+			
+			 
+		} 
 		
 		
 			 //======================================================================================
@@ -82,7 +90,11 @@
 			if(	$create_email_error == "" && $create_password_error == ""){
 				echo "Võib kasutajat luua! Kasutajanimi on ".$create_email." ja parool on ".$create_password;
 				
-				function createUser(){
+				$password_hash = hash("sha512", $create_password);
+				echo "<br>";
+				echo $password_hash;
+				
+				createUser($create_email, $password_hash);
 				
 			}
    
